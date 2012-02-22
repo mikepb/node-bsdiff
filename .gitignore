@@ -1,0 +1,8 @@
+.DS_Store
+.lock-wscript
+.svn
+*.o
+build
+lib
+node_modules
+npm-debug.log

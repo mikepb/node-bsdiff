@@ -1,0 +1,31 @@
+{
+  "name": "bsdiff",
+  "description": "Bindings to bsdiff",
+  "homepage": "https://github.com/mikepb/node-bsdiff",
+  "version": "0.0.1",
+  "main": "lib",
+  "engines": {
+    "node": ">= 0.6.x < 0.7.0"
+  },
+  "scripts": {
+    "prepublish": "make coffee",
+    "preinstall": "if [ ! -f ./lib/index.js ]; then make coffee; fi",
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mikepb/node-bsdiff.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mikepb/node-bsdiff/issues"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "coffee-script": "~1.2.0",
+    "mocha": "~0.11.0"
+  },
+  "contributors": [
+    "Michael Phan-Ba <michael@mikepb.com>"
+  ]
+}

@@ -1,0 +1,5 @@
+.DS_Store
+build
+lib/bsdiff.node
+node_modules
+npm-debug.log
