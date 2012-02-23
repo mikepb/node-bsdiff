@@ -24,7 +24,7 @@ class async_stub : public bsdiff_dat {
 
   Persistent<Function> callback;
 
-  async_stub() : err(0) {
+  async_stub() : bsdiff_dat(), err(0) {
   }
 
   ~async_stub() {
