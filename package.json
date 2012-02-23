@@ -9,7 +9,8 @@
   },
   "scripts": {
     "prepublish": "make coffee",
-    "preinstall": "if [ ! -f ./lib/index.js ]; then make coffee; fi",
+    "preinstall": "make distclean build clean",
+    "postinstall": "if [ ! -f ./lib/index.js ]; then make coffee; fi",
     "test": "make test"
   },
   "repository": {
