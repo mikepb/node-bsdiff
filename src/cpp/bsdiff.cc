@@ -30,7 +30,6 @@
 #include <algorithm>
 #include <vector>
 
-#include "endian.h"
 #include "bsdiff.h"
 
 namespace node_bsdiff {
@@ -306,13 +305,13 @@ int bsdiff(bsdiff_dat *args) {
       xtralen += (scan - lenb) - (lastscan + lenf);
 
       /* add x bytes from oldfile to x bytes from the diff block */
-      ctrl.push_back(b32le(lenf));
+      ctrl.push_back(lenf);
 
       /* copy y bytes from the xtra block */
-      ctrl.push_back(b32le((scan - lenb) - (lastscan + lenf)));
+      ctrl.push_back((scan - lenb) - (lastscan + lenf));
 
       /* seek forwards in oldfile by z bytes */
-      ctrl.push_back(b32le((pos - lenb) - (lastpos + lenf)));
+      ctrl.push_back((pos - lenb) - (lastpos + lenf));
 
       lastscan = scan - lenb;
       lastpos = pos - lenb;
@@ -369,9 +368,9 @@ int bspatch(bsdiff_dat *args) {
   while (destIdx < curlen) {
 
     /* Unpack control data */
-    addN = b32le(ctrl[ctrlpos++]);
-    copyN = b32le(ctrl[ctrlpos++]);
-    seekN = b32le(ctrl[ctrlpos++]);
+    addN = ctrl[ctrlpos++];
+    copyN = ctrl[ctrlpos++];
+    seekN = ctrl[ctrlpos++];
 
     /* Sanity-check */
     if (destIdx + addN > curlen || srcIdx + addN > reflen ||

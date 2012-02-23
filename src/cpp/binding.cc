@@ -22,6 +22,11 @@
 #include <node_buffer.h>
 #include <v8.h>
 
+#include "boost/endian.hpp"
+#ifdef BOOST_BIG_ENDIAN
+# include "gnuclib/byteswap.h"
+#endif
+
 #include "bsdiff.h"
 
 using namespace node;
@@ -82,6 +87,11 @@ static void AfterDiff(uv_work_t *req) {
   async_stub *shim = static_cast<async_stub *>(req->data);
 
   if (shim->err != 0) return Error(shim);
+
+#ifdef BOOST_BIG_ENDIAN
+  for (size_t i = shim->ctrl.size() - 1; i >= 0; --it)
+    shim->ctrl[i] = bswap_32(shim->ctrl[i]);
+#endif
 
   Buffer *ctrl = Buffer::New(reinterpret_cast<char *>(shim->ctrl.data()),
                              shim->ctrl.size() * sizeof(int));
@@ -177,8 +187,14 @@ Handle<Value> Patch(const Arguments& args) {
   async_stub *shim = new async_stub;
 
   const int *ctrldat = reinterpret_cast<int *>(Buffer::Data(ctrl));
-  const uint32_t ctrllen = Buffer::Length(ctrl);
-  for (uint32_t i = 0; i < ctrllen; ++i) shim->ctrl.push_back(ctrldat[i]);
+  const size_t ctrllen = Buffer::Length(ctrl);
+
+#ifdef BOOST_BIG_ENDIAN
+  for (size_t i = ctrllen - 1; i >= 0; --it)
+    ctrldat[i] = bswap_32(ctrldat[i]);
+#endif
+
+  shim->ctrl.assign(ctrldat, ctrldat + ctrllen);
 
   shim->refdat = Buffer::Data(ref);
   shim->diff = Buffer::Data(diff);
