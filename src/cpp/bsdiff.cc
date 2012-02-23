@@ -192,48 +192,28 @@ static size_t search(
   }
 }
 
-int bsdiff(bsdiff_dat *args)
-{
+int bsdiff(bsdiff_dat *args) {
+
+  /* Intput */
   const unsigned char *curdat = (unsigned char *)args->curdat;
   const unsigned char *refdat = (unsigned char *)args->refdat;
+
   const size_t curlen = args->curlen;
   const size_t reflen = args->reflen;
 
   /* Output */
-  unsigned char *diff;
-  unsigned char *xtra;
-
+  unsigned char *diff, *xtra;
   std::vector<int>& ctrl = args->ctrl;
-
-  size_t difflen = 0;
-  size_t xtralen = 0;
+  size_t difflen = 0, xtralen = 0;
 
   /* Compute */
-  int scan = 0;
-  int pos = 0;
-  int len = 0;
-
-  int lastscan = 0;
-  int lastpos = 0;
-  int lastoffset = 0;
-
-  int oldscore;
-  int scsc;
-
-  int s;
-  int Sf;
-  int lenf;
-  int Sb;
-  int lenb;
-
-  int overlap;
-  int Ss;
-  int lens;
-
+  int *I, *V;
+  int scan = 0, pos = 0, len = 0;
+  int lastscan = 0, lastpos = 0, lastoffset = 0;
+  int oldscore, scsc;
+  int s, Sf, lenf, Sb, lenb;
+  int overlap, Ss, lens;
   int i;
-
-  int *I;
-  int *V;
 
   I = new (std::nothrow) int[reflen + 1];
   if (I == NULL) goto e_malloc_I;
@@ -358,17 +338,13 @@ e_malloc_I:     ;
   return -2;
 }
 
-int bspatch(bsdiff_dat *args)
-{
-  if (args->curdat == NULL) {
-    args->curdat = new (std::nothrow) char[args->curlen + 1];
-    if (args->curdat == NULL) return -2;
-  }
+int bspatch(bsdiff_dat *args) {
 
-  unsigned char *curdat = reinterpret_cast<unsigned char *>(args->curdat);
+  /* Intput */
   const unsigned char *refdat = reinterpret_cast<unsigned char *>(args->refdat);
   const unsigned char *diff = reinterpret_cast<unsigned char *>(args->diff);
   const unsigned char *xtra = reinterpret_cast<unsigned char *>(args->xtra);
+
   const std::vector<int>& ctrl = args->ctrl;
 
   const size_t curlen = args->curlen;
@@ -376,6 +352,11 @@ int bspatch(bsdiff_dat *args)
   const size_t difflen = args->difflen;
   const size_t xtralen = args->xtralen;
 
+  /* Output */
+  unsigned char *curdat = new (std::nothrow) unsigned char[curlen + 1];
+  if (curdat == NULL) return -2;
+
+  /* Compute */
   size_t destIdx = 0, srcIdx = 0;
   size_t ctrlpos = 0, diffIdx = 0, xtraIdx = 0;
   size_t addN, copyN, seekN;
@@ -414,6 +395,9 @@ int bspatch(bsdiff_dat *args)
     destIdx += copyN;
     srcIdx += seekN;
   };
+
+  /* Write output data */
+  args->curdat = reinterpret_cast<char *>(curdat);
 
   return 0;
 }

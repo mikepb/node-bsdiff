@@ -16,11 +16,11 @@ class async_stub : public bsdiff_dat {
  public:
   int err;
 
-  Persistent<Value> cur_handle;
-  Persistent<Value> ref_handle;
-  Persistent<Value> ctrl_handle;
-  Persistent<Value> diff_handle;
-  Persistent<Value> xtra_handle;
+  Persistent<Value> curHandle;
+  Persistent<Value> refHandle;
+  Persistent<Value> ctrlHandle;
+  Persistent<Value> diffHandle;
+  Persistent<Value> xtraHandle;
 
   Persistent<Function> callback;
 
@@ -28,11 +28,11 @@ class async_stub : public bsdiff_dat {
   }
 
   ~async_stub() {
-    cur_handle.Dispose();
-    ref_handle.Dispose();
-    ctrl_handle.Dispose();
-    diff_handle.Dispose();
-    xtra_handle.Dispose();
+    curHandle.Dispose();
+    refHandle.Dispose();
+    ctrlHandle.Dispose();
+    diffHandle.Dispose();
+    xtraHandle.Dispose();
     callback.Dispose();
   }
 
@@ -125,8 +125,8 @@ Handle<Value> Diff(const Arguments& args) {
   shim->curlen = Buffer::Length(cur);
   shim->reflen = Buffer::Length(ref);
 
-  shim->cur_handle = Persistent<Value>::New(cur);
-  shim->ref_handle = Persistent<Value>::New(ref);
+  shim->curHandle = Persistent<Value>::New(cur);
+  shim->refHandle = Persistent<Value>::New(ref);
 
   shim->callback = Persistent<Function>::New(callback);
 
@@ -171,10 +171,10 @@ Handle<Value> Patch(const Arguments& args) {
   shim->difflen = Buffer::Length(diff);
   shim->xtralen = Buffer::Length(xtra);
 
-  shim->ref_handle = Persistent<Value>::New(ref);
-  shim->ctrl_handle = Persistent<Value>::New(ctrl);
-  shim->diff_handle = Persistent<Value>::New(diff);
-  shim->xtra_handle = Persistent<Value>::New(xtra);
+  shim->refHandle = Persistent<Value>::New(ref);
+  shim->ctrlHandle = Persistent<Value>::New(ctrl);
+  shim->diffHandle = Persistent<Value>::New(diff);
+  shim->xtraHandle = Persistent<Value>::New(xtra);
 
   shim->callback = Persistent<Function>::New(callback);
 
