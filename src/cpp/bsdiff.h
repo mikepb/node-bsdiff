@@ -1,8 +1,6 @@
 #ifndef NODE_BSDIFF_H_
 #define NODE_BSDIFF_H_
 
-#include <string.h>
-
 #include <vector>
 
 namespace node_bsdiff {

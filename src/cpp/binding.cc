@@ -1,4 +1,4 @@
-#include <assert.h>
+#include <vector>
 
 #include <node.h>
 #include <node_buffer.h>
@@ -65,17 +65,12 @@ static void AfterDiff(uv_work_t *req) {
 
   if (shim->err != 0) return Error(shim);
 
-  Local<Array> ctrl = Array::New(shim->ctrl.size());
-
-  int i = 0;
-  std::vector<int>::iterator it;
-  for (it = shim->ctrl.begin(); it < shim->ctrl.end(); ++it, ++i)
-    ctrl->Set(i, Integer::New(*it));
-
+  Buffer *ctrl = Buffer::New(reinterpret_cast<char *>(shim->ctrl.data()),
+                             shim->ctrl.size() * sizeof(int));
   Buffer *diff = Buffer::New(shim->diff, shim->difflen, DeleteMemory, NULL);
   Buffer *xtra = Buffer::New(shim->xtra, shim->xtralen, DeleteMemory, NULL);
 
-  Handle<Value> argv[] = { Null(), ctrl, diff->handle_, xtra->handle_ };
+  Handle<Value> argv[] = { Null(), ctrl->handle_, diff->handle_, xtra->handle_ };
   TryCatch tryCatch;
   shim->callback->Call(Context::GetCurrent()->Global(), 4, argv);
   if (tryCatch.HasCaught()) FatalException(tryCatch);
@@ -147,7 +142,7 @@ Handle<Value> Patch(const Arguments& args) {
   if (args.Length() != 6 ||
       !args[0]->IsNumber() ||           // current
       !Buffer::HasInstance(args[1]) ||  // reference
-      !args[2]->IsArray() ||            // control
+      !Buffer::HasInstance(args[2]) ||  // control
       !Buffer::HasInstance(args[3]) ||  // diff
       !Buffer::HasInstance(args[4]) ||  // extra
       !args[5]->IsFunction())           // callback
@@ -155,7 +150,7 @@ Handle<Value> Patch(const Arguments& args) {
 
   uint32_t curlen = args[0]->Uint32Value();
   Local<Object> ref = args[1]->ToObject();
-  Local<Array> ctrl = Local<Array>::Cast(args[2]->ToObject());
+  Local<Object> ctrl = args[2]->ToObject();
   Local<Object> diff = args[3]->ToObject();
   Local<Object> xtra = args[4]->ToObject();
   Local<Function> callback = Local<Function>::Cast(args[5]);
@@ -163,8 +158,9 @@ Handle<Value> Patch(const Arguments& args) {
   uv_work_t *req = new uv_work_t;
   async_stub *shim = new async_stub;
 
-  for (uint32_t i = 0; i < ctrl->Length(); ++i)
-    shim->ctrl.push_back(ctrl->Get(i)->Uint32Value());
+  const int *ctrldat = reinterpret_cast<int *>(Buffer::Data(ctrl));
+  const uint32_t ctrllen = Buffer::Length(ctrl);
+  for (uint32_t i = 0; i < ctrllen; ++i) shim->ctrl.push_back(ctrldat[i]);
 
   shim->refdat = Buffer::Data(ref);
   shim->diff = Buffer::Data(diff);
