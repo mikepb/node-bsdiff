@@ -8,8 +8,9 @@
     "node": ">= 0.6.x < 0.7.0"
   },
   "scripts": {
-    "prepublish": "make prepublish",
-    "preinstall": "make preinstall",
+    "prepublish": "make coffee",
+    "preinstall": "make build clean",
+    "install": "make coffee",
     "test": "make test"
   },
   "repository": {

@@ -5,5 +5,4 @@ lib/bsdiff.node
 node_modules
 node-bsdiff.xcodeproj
 npm-debug.log
-src/coffee
 test
