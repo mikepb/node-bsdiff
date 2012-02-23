@@ -37,9 +37,7 @@ class bsdiff_dat {
 
   std::vector<int> ctrl;
 
-  bsdiff_dat() {
-    memset(this, 0, sizeof(bsdiff_dat));
-  }
+  bsdiff_dat();
 };
 
 int bsdiff(bsdiff_dat *args);

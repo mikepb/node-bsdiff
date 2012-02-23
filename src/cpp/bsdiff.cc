@@ -35,6 +35,10 @@
 
 namespace node_bsdiff {
 
+bsdiff_dat::bsdiff_dat() {
+  memset(this, 0, sizeof(bsdiff_dat));
+}
+
 static void split(int *I, int *V, int start, int len, int h) {
   int i, j, k, x, tmp, jj, kk;
 
