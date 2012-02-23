@@ -17,6 +17,6 @@ distclean: clean
 	rm -rf lib node_modules
 
 test: build coffee
-	mocha --reporter $(REPORTER) --timeout 30000 test/*-test.coffee
+	mocha --reporter $(REPORTER) test/*-test.coffee
 
 .PHONY: build coffee clean distclean test
