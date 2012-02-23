@@ -243,7 +243,7 @@ int bsdiff(bsdiff_dat *args)
 
   qsufsort(I, V, refdat, reflen);
 
-  free(V);
+  delete V;
 
   diff = new (std::nothrow) unsigned char[curlen + 1];
   if (diff == NULL) goto e_malloc_diff;
@@ -337,7 +337,7 @@ int bsdiff(bsdiff_dat *args)
   }
 
   /* Free the memory we used */
-  free(I);
+  delete I;
 
   /* Write diff data */
   args->diff = reinterpret_cast<char *>(diff);
