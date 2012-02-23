@@ -11,12 +11,18 @@ coffee:
 	coffee --bare --compile --output lib src/coffee
 
 clean:
-	node-waf clean
+	rm -rf build
 
 distclean: clean
 	rm -rf lib node_modules
 
+preinstall: build clean
+	if [ ! -f ./lib/index.js ]; then make coffee; fi
+	rm -rf Makefile src test wscript
+
+prepublish: coffee
+
 test: build coffee
 	mocha --reporter $(REPORTER) --timeout 30000 test/*-test.coffee
 
-.PHONY: build coffee clean distclean test
+.PHONY: build coffee clean distclean preinstall prepublish test

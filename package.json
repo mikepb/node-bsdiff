@@ -8,9 +8,8 @@
     "node": ">= 0.6.x < 0.7.0"
   },
   "scripts": {
-    "prepublish": "make coffee",
-    "preinstall": "make distclean build clean",
-    "postinstall": "if [ ! -f ./lib/index.js ]; then make coffee; fi",
+    "prepublish": "make prepublish",
+    "preinstall": "make preinstall",
     "test": "make test"
   },
   "repository": {

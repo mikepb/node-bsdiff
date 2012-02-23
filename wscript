@@ -14,9 +14,6 @@ def configure(conf):
   conf.check_tool('compiler_cxx')
   conf.check_tool('node_addon')
 
-def clean(ctx):
-  if exists('build'): rmtree('build')
-
 def build_post(bld):
   module_path = bld.path.find_resource('bsdiff.node').abspath(bld.env)
   system('mkdir -p lib')
